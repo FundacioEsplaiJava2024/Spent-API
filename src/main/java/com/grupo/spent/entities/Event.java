@@ -1,6 +1,6 @@
 package com.grupo.spent.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import jakarta.persistence.Column;
@@ -27,21 +27,21 @@ public class Event {
     @Column(name = "id")
     private Integer id;
 
-    @Column(nullable = false, name="title")
+    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, name="date")
-    private Date date;
+    @Column(nullable = false)
+    private LocalDate date;
 
-    @Column(nullable = false, name="startTime")
-    private LocalTime startTime;
+    @Column(nullable = false)
+    private LocalTime start_time;
 
-    @Column(nullable = true, name="endTime")
-    private LocalTime endTime;
+    @Column()
+    private LocalTime end_time;
 
-    @Column(nullable = true, name="numParticipants")
-    private Integer numParticipants;
+    @Column()
+    private Integer num_participants;
 
-    @Column(nullable = false, name="adress")
-    private String adress;
+    @Column(nullable = false)
+    private String address;
 }
