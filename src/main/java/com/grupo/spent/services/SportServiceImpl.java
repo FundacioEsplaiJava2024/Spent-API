@@ -20,8 +20,8 @@ public class SportServiceImpl implements SportService{
     }
 
     @Override
-    public Sport getSportById(int id) {
-        return sportRepository.findById(id).orElse(null);
+    public Sport getSportById(String name) {
+        return sportRepository.findSportByName(name);
     }
 
     @Override

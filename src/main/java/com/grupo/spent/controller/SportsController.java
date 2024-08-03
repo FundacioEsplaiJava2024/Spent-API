@@ -26,11 +26,10 @@ public class SportsController {
         return ResponseEntity.status(HttpStatus.OK).body(sportsService.getAllSports());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getSportById(@PathVariable Integer id) {
-        Sport sport = sportsService.getSportById(id);
+    @GetMapping("/{name}")
+    public ResponseEntity<?> getSportById(@PathVariable String name) {
+        Sport sport = sportsService.getSportById(name);
         return ResponseEntity.status(HttpStatus.OK).body(sport);
 
     }
-
 }

@@ -7,5 +7,5 @@ import com.grupo.spent.entities.Sport;
 
 @Repository
 public interface SportRepository extends JpaRepository<Sport, Integer>{
-
+    Sport findSportByName(String name);
 }
