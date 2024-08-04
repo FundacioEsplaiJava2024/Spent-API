@@ -32,17 +32,13 @@ public class EventController {
 
     @PostMapping("")
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) throws Exception {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
-                    createEventDto.getTitle(),
-                    createEventDto.getDate(),
-                    createEventDto.getStartTime(),
-                    createEventDto.getEndTime(),
-                    createEventDto.getNumParticipants(),
-                    createEventDto.getAddress()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
+                createEventDto.getTitle(),
+                createEventDto.getDate(),
+                createEventDto.getStartTime(),
+                createEventDto.getEndTime(),
+                createEventDto.getNumParticipants(),
+                createEventDto.getAddress()));
     }
 
     @GetMapping("")
@@ -67,6 +63,7 @@ public class EventController {
         Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNumParticipants());
         String address = editEventDto.getAddress().orElse(event.getAddress());
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));
     }
 }
