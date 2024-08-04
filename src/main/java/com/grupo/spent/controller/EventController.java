@@ -62,9 +62,9 @@ public class EventController {
 
         String title = editEventDto.getTitle().orElse(event.getTitle());
         LocalDate date = editEventDto.getDate().orElse(event.getDate());
-        LocalTime startTime = editEventDto.getStartTime().orElse(event.getStart_time());
-        LocalTime endTime = editEventDto.getEndTime().orElse(event.getEnd_time());
-        Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNum_participants());
+        LocalTime startTime = editEventDto.getStartTime().orElse(event.getStartTime());
+        LocalTime endTime = editEventDto.getEndTime().orElse(event.getEndTime());
+        Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNumParticipants());
         String address = editEventDto.getAddress().orElse(event.getAddress());
 
         return ResponseEntity.status(HttpStatus.OK).body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));

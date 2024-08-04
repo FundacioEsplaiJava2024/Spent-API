@@ -24,9 +24,9 @@ public class EventServiceImpl implements EventService{
         Event event = new Event();
         event.setTitle(title);
         event.setDate(date);
-        event.setStart_time(startTime);
-        event.setEnd_time(endTime);
-        event.setNum_participants(numParticipants);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setNumParticipants(numParticipants);
         event.setAddress(address);
 
         return eventRepository.save(event);
@@ -52,9 +52,9 @@ public class EventServiceImpl implements EventService{
         Event existingEvent = eventRepository.findById(id).orElse(null);
         existingEvent.setTitle(title);
         existingEvent.setDate(data);
-        existingEvent.setStart_time(startTime);
-        existingEvent.setEnd_time(endTime);
-        existingEvent.setNum_participants(numParticipants);
+        existingEvent.setStartTime(startTime);
+        existingEvent.setEndTime(endTime);
+        existingEvent.setNumParticipants(numParticipants);
         existingEvent.setAddress(address);
 
         return eventRepository.save(existingEvent);

@@ -27,21 +27,21 @@ public class Event {
     @Column(name = "id")
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="title")
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="date")
     private LocalDate date;
 
-    @Column(nullable = false)
-    private LocalTime start_time;
+    @Column(nullable = false, name="start_time")
+    private LocalTime startTime;
 
-    @Column()
-    private LocalTime end_time;
+    @Column(name="end_time")
+    private LocalTime endTime;
 
-    @Column()
-    private Integer num_participants;
+    @Column(name="num_participants")
+    private Integer numParticipants;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="address")
     private String address;
 }

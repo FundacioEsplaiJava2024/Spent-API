@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `event` (
 );
 
 -- Table structure for table `sport`
--- DROP TABLE IF EXISTS `sport`;
+DROP TABLE IF EXISTS `sport`;
 CREATE TABLE IF NOT EXISTS sport (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(20) UNIQUE NOT NULL,
