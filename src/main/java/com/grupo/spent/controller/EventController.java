@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.grupo.spent.dtos.CreateEventDto;
 import com.grupo.spent.dtos.EditEventDto;
 import com.grupo.spent.entities.Event;
+import com.grupo.spent.entities.Sport;
 import com.grupo.spent.services.EventService;
+import com.grupo.spent.services.SportService;
 
 import lombok.AllArgsConstructor;
+
 
 @RestController
 @RequestMapping("/events")
@@ -29,16 +32,20 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
+    @Autowired
+    private SportService sportService;
 
     @PostMapping("")
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) throws Exception {
+    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) {
+        Sport sport = sportService.getSportByName(createEventDto.getSportName());
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
                 createEventDto.getTitle(),
                 createEventDto.getDate(),
                 createEventDto.getStartTime(),
                 createEventDto.getEndTime(),
                 createEventDto.getNumParticipants(),
-                createEventDto.getAddress()));
+                createEventDto.getAddress(),
+                sport));
     }
 
     @GetMapping("")
