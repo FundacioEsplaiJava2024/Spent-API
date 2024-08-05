@@ -50,4 +50,8 @@ public class Event {
     @ManyToOne
     @JoinColumn (name = "sport_id")
     private Sport sport;
+
+    @ManyToOne
+    @JoinColumn (name = "user_id")
+    private User userCreator;    
 }

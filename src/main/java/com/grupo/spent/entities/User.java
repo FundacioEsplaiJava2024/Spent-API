@@ -17,6 +17,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,11 +56,15 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Double rating;
 
+    @JsonIgnore
     @Column(nullable = false)
     private int totalRatings;
 
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Event> eventsCreated;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
