@@ -65,7 +65,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "userCreator")
     private List<Event> eventsCreated;
 
     @ManyToMany(mappedBy = "eventParticipants")
