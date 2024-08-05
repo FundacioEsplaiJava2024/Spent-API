@@ -44,6 +44,4 @@ public class Sport {
     public void dismissEvent(Event event) {
         this.events.remove(event);
     }
-
-
 }
