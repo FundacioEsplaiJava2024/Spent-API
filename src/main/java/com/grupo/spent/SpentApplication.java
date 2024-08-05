@@ -10,5 +10,4 @@ public class SpentApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpentApplication.class, args);
 	}
-
 }

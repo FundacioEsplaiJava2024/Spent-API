@@ -13,4 +13,5 @@ public class CreateEventDto {
     private LocalTime endTime;
     private Integer numParticipants;
     private String address;
+    private String sportName;
 }

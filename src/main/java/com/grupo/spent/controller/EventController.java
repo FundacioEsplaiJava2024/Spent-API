@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.grupo.spent.dtos.CreateEventDto;
 import com.grupo.spent.dtos.EditEventDto;
 import com.grupo.spent.entities.Event;
+import com.grupo.spent.entities.Sport;
 import com.grupo.spent.services.EventService;
+import com.grupo.spent.services.SportService;
 
 import lombok.AllArgsConstructor;
+
 
 @RestController
 @RequestMapping("/events")
@@ -29,20 +32,20 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
+    @Autowired
+    private SportService sportService;
 
     @PostMapping("")
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) throws Exception {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
-                    createEventDto.getTitle(),
-                    createEventDto.getDate(),
-                    createEventDto.getStartTime(),
-                    createEventDto.getEndTime(),
-                    createEventDto.getNumParticipants(),
-                    createEventDto.getAddress()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(e.getMessage());
-        }
+    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) {
+        Sport sport = sportService.getSportByName(createEventDto.getSportName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
+                createEventDto.getTitle(),
+                createEventDto.getDate(),
+                createEventDto.getStartTime(),
+                createEventDto.getEndTime(),
+                createEventDto.getNumParticipants(),
+                createEventDto.getAddress(),
+                sport));
     }
 
     @GetMapping("")
@@ -62,11 +65,12 @@ public class EventController {
 
         String title = editEventDto.getTitle().orElse(event.getTitle());
         LocalDate date = editEventDto.getDate().orElse(event.getDate());
-        LocalTime startTime = editEventDto.getStartTime().orElse(event.getStart_time());
-        LocalTime endTime = editEventDto.getEndTime().orElse(event.getEnd_time());
-        Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNum_participants());
+        LocalTime startTime = editEventDto.getStartTime().orElse(event.getStartTime());
+        LocalTime endTime = editEventDto.getEndTime().orElse(event.getEndTime());
+        Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNumParticipants());
         String address = editEventDto.getAddress().orElse(event.getAddress());
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));
     }
 }

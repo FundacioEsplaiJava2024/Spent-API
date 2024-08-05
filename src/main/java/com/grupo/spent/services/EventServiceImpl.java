@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.grupo.spent.entities.Event;
+import com.grupo.spent.entities.Sport;
 import com.grupo.spent.repositories.EventRepository;
 
 import lombok.AllArgsConstructor;
@@ -20,14 +21,16 @@ public class EventServiceImpl implements EventService{
     private EventRepository eventRepository;
 
     @Override
-    public Event createEvent (String title, LocalDate date, LocalTime startTime, LocalTime endTime, Integer numParticipants, String address) {
+    public Event createEvent (String title, LocalDate date, LocalTime startTime, LocalTime endTime, 
+    Integer numParticipants, String address, Sport sport) {
         Event event = new Event();
         event.setTitle(title);
         event.setDate(date);
-        event.setStart_time(startTime);
-        event.setEnd_time(endTime);
-        event.setNum_participants(numParticipants);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setNumParticipants(numParticipants);
         event.setAddress(address);
+        event.setSport(sport);
 
         return eventRepository.save(event);
     }
@@ -52,9 +55,9 @@ public class EventServiceImpl implements EventService{
         Event existingEvent = eventRepository.findById(id).orElse(null);
         existingEvent.setTitle(title);
         existingEvent.setDate(data);
-        existingEvent.setStart_time(startTime);
-        existingEvent.setEnd_time(endTime);
-        existingEvent.setNum_participants(numParticipants);
+        existingEvent.setStartTime(startTime);
+        existingEvent.setEndTime(endTime);
+        existingEvent.setNumParticipants(numParticipants);
         existingEvent.setAddress(address);
 
         return eventRepository.save(existingEvent);
