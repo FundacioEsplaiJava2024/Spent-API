@@ -55,7 +55,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Double rating;
 
-    @Column()
+    @Column(nullable = false)
     private int totalRatings;
 
     @Enumerated(EnumType.STRING)
