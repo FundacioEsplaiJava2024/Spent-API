@@ -3,6 +3,7 @@ package com.grupo.spent.entities;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -65,6 +67,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Event> eventsCreated;
+
+    @ManyToMany(mappedBy = "eventParticipants")
+    Set<Event> signeUpEvents;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
