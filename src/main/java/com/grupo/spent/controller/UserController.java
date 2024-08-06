@@ -3,6 +3,7 @@ package com.grupo.spent.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,13 +23,21 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(registerDto.getEmail(), registerDto.getUsername(), registerDto.getName(), registerDto.getPassword()));
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.register(registerDto.getEmail(), registerDto.getUsername(), registerDto.getName(),
+                        registerDto.getPassword()));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-        String token = userService.login(loginDto.getEmail(), loginDto.getPassword());
-        return ResponseEntity.status(HttpStatus.CREATED).body(token);
+        try {
+            var accessToken = userService.login(loginDto.getEmail(), loginDto.getPassword());
+            String formattedResponse = "accessToken: " + accessToken;
+            return ResponseEntity.status(HttpStatus.OK).body(formattedResponse);
+        } catch (AuthenticationException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
+        }
     }
 
 }
