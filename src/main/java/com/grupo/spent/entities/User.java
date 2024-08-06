@@ -69,7 +69,7 @@ public class User implements UserDetails {
     private List<Event> eventsCreated;
 
     @ManyToMany(mappedBy = "eventParticipants")
-    Set<Event> signeUpEvents;
+    Set<Event> signedUpEvents;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
