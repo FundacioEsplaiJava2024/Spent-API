@@ -3,9 +3,11 @@ package com.grupo.spent.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +26,6 @@ import com.grupo.spent.services.SportService;
 
 import lombok.AllArgsConstructor;
 
-
 @RestController
 @RequestMapping("/events")
 @AllArgsConstructor
@@ -36,16 +37,23 @@ public class EventController {
     private SportService sportService;
 
     @PostMapping("")
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) {
+    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) throws Exception {
         Sport sport = sportService.getSportByName(createEventDto.getSportName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
                 createEventDto.getTitle(),
                 createEventDto.getDate(),
                 createEventDto.getStartTime(),
                 createEventDto.getEndTime(),
                 createEventDto.getNumParticipants(),
                 createEventDto.getAddress(),
-                sport));
+                sport,
+                email));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
+        }
     }
 
     @GetMapping("")

@@ -5,11 +5,14 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
+import com.grupo.spent.entities.User;
 import com.grupo.spent.repositories.EventRepository;
+import com.grupo.spent.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -19,10 +22,14 @@ public class EventServiceImpl implements EventService{
 
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Event createEvent (String title, LocalDate date, LocalTime startTime, LocalTime endTime, 
-    Integer numParticipants, String address, Sport sport) {
+    Integer numParticipants, String address, Sport sport, String email) {
+        UserDetails userDetails = userRepository.findUserByEmail(email).orElse(null);
+        User user = (User) userDetails;
         Event event = new Event();
         event.setTitle(title);
         event.setDate(date);
@@ -31,6 +38,7 @@ public class EventServiceImpl implements EventService{
         event.setNumParticipants(numParticipants);
         event.setAddress(address);
         event.setSport(sport);
+        event.setUserCreator(user);
 
         return eventRepository.save(event);
     }

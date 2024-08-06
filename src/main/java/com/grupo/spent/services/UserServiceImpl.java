@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.grupo.spent.auth.TokenProvider;
@@ -25,9 +25,11 @@ public class UserServiceImpl implements UserService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private TokenProvider tokenProvider;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public String register(String email, String username, String name, String password) {
-        String encryptedPassword = new BCryptPasswordEncoder().encode(password);
+        String encryptedPassword = passwordEncoder.encode(password);
         User user = User.builder()
                 .email(email)
                 .username(username)
@@ -37,9 +39,14 @@ public class UserServiceImpl implements UserService {
                 .registerDate(LocalDate.now())
                 .rating(0.0)
                 .build();
+        userRepository.save(user);
         String token = "accessToken : " + this.login(email, password);
-        String response = userRepository.save(user) + token; 
+        String response = "Email : " + user.getEmail() + "\n"
+                + "Username: " + user.getUsername() + "\n"
+                + "First Name: " + user.getFirstName() + "\n"
+                + token;
         return response;
+
     }
 
     public String login(String email, String password) {

@@ -9,7 +9,7 @@ import com.grupo.spent.entities.Sport;
 
 public interface EventService {
     Event createEvent (String title, LocalDate data, LocalTime startTime, LocalTime endTime, Integer numParticipants, 
-        String address, Sport sport);
+        String address, Sport sport, String email);
     List<Event> getAllEvents();
     Event getEventById(Integer id);
     void deleteEvent(Integer id);
