@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> register(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         String token = userService.login(loginDto.getEmail(), loginDto.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
