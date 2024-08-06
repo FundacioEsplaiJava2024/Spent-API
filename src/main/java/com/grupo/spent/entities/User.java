@@ -15,6 +15,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -65,7 +66,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "userCreator")
+    @OneToMany(mappedBy = "userCreator", fetch = FetchType.EAGER)
     private List<Event> eventsCreated;
 
     @ManyToMany(mappedBy = "eventParticipants")
