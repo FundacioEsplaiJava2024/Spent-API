@@ -23,10 +23,13 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
-
-        return ResponseEntity.status(HttpStatus.CREATED)
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.register(registerDto.getEmail(), registerDto.getUsername(), registerDto.getName(),
                         registerDto.getPassword()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
