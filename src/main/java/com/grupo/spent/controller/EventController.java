@@ -98,4 +98,15 @@ public class EventController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
     }
+
+    @PostMapping("/join/{id}")
+    public ResponseEntity<?> joinEvent(@PathVariable Integer id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findUserByUsername(username);
+        Event event = eventService.getEventById(id);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.joinEvent(event, user));
+    }
+    
 }

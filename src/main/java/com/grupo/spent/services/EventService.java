@@ -15,4 +15,5 @@ public interface EventService {
     Event getEventById(Integer id);
     void deleteEvent(Integer id);
     Event editEvent (Integer id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, Integer numParticipants, String address);
+    Event joinEvent(Event event, User user);
 }

@@ -73,9 +73,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userCreator")
     private List<Event> eventsCreated;
 
-    @Fetch(FetchMode.JOIN)
     @ManyToMany(mappedBy = "eventParticipants")
-    Set<Event> signedUpEvents;
+    @Fetch(FetchMode.JOIN)
+    Set<Event> joinedEvents;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
