@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String register(String email, String username, String name, String password) {
+    public User register(String email, String username, String name, String password) {
         String encryptedPassword = passwordEncoder.encode(password);
         User user = User.builder()
                 .email(email)
@@ -39,14 +39,7 @@ public class UserServiceImpl implements UserService {
                 .registerDate(LocalDate.now())
                 .rating(0.0)
                 .build();
-        userRepository.save(user);
-        String token = "accessToken : " + this.login(email, password);
-        String response = "Email : " + user.getEmail() + "\n"
-                + "Username: " + user.getUsername() + "\n"
-                + "First Name: " + user.getFirstName() + "\n"
-                + token;
-        return response;
-
+        return userRepository.save(user);
     }
 
     public String login(String email, String password) {
@@ -54,5 +47,9 @@ public class UserServiceImpl implements UserService {
         var authUser = authenticationManager.authenticate(usernamePassword);
         var accessToken = tokenProvider.generateAccessToken((User) authUser.getPrincipal());
         return accessToken;
+    }
+
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
     }
 }

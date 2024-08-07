@@ -69,7 +69,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userCreator", fetch = FetchType.EAGER)
     private List<Event> eventsCreated;
 
-    @ManyToMany(mappedBy = "eventParticipants")
+    @ManyToMany(mappedBy = "eventParticipants", fetch = FetchType.EAGER)
     Set<Event> signedUpEvents;
 
     @Override

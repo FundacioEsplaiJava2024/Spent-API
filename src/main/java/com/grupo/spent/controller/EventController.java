@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +22,10 @@ import com.grupo.spent.dtos.CreateEventDto;
 import com.grupo.spent.dtos.EditEventDto;
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
+import com.grupo.spent.entities.User;
 import com.grupo.spent.services.EventService;
 import com.grupo.spent.services.SportService;
+import com.grupo.spent.services.UserService;
 
 import lombok.AllArgsConstructor;
 
@@ -35,12 +38,15 @@ public class EventController {
     private EventService eventService;
     @Autowired
     private SportService sportService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("")
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) throws Exception {
         Sport sport = sportService.getSportByName(createEventDto.getSportName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
+        String username = authentication.getName();
+        User user = userService.findUserByUsername(username);
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
                 createEventDto.getTitle(),
@@ -50,7 +56,7 @@ public class EventController {
                 createEventDto.getNumParticipants(),
                 createEventDto.getAddress(),
                 sport,
-                email));
+                user));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
         }

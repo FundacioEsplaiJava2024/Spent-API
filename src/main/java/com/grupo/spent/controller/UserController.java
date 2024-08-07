@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.grupo.spent.dtos.LoginDto;
 import com.grupo.spent.dtos.RegisterDto;
+import com.grupo.spent.dtos.RegisterResponseDto;
+import com.grupo.spent.entities.User;
 import com.grupo.spent.services.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +26,14 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
         try {
+            User user = userService.register(registerDto.getEmail(), registerDto.getUsername(), registerDto.getName(),
+            registerDto.getPassword());
+            // String token = userService.login(user.getEmail(), user.getPassword());
+            String token = "manuel0";
+            RegisterResponseDto registerResponseDto = new RegisterResponseDto(user.getEmail(), user.getUsername(), user.getFirstName(), token);
+
             return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.register(registerDto.getEmail(), registerDto.getUsername(), registerDto.getName(),
-                        registerDto.getPassword()));
+                .body(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

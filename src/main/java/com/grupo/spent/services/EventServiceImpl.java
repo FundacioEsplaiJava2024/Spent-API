@@ -27,9 +27,8 @@ public class EventServiceImpl implements EventService{
 
     @Override
     public Event createEvent (String title, LocalDate date, LocalTime startTime, LocalTime endTime, 
-    Integer numParticipants, String address, Sport sport, String email) {
-        UserDetails userDetails = userRepository.findUserByEmail(email).orElse(null);
-        User user = (User) userDetails;
+    Integer numParticipants, String address, Sport sport, User user) {
+
         Event event = new Event();
         event.setTitle(title);
         event.setDate(date);

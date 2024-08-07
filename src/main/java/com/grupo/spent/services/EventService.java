@@ -6,10 +6,11 @@ import java.util.List;
 
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
+import com.grupo.spent.entities.User;
 
 public interface EventService {
     Event createEvent (String title, LocalDate data, LocalTime startTime, LocalTime endTime, Integer numParticipants, 
-        String address, Sport sport, String email);
+        String address, Sport sport, User user);
     List<Event> getAllEvents();
     Event getEventById(Integer id);
     void deleteEvent(Integer id);
