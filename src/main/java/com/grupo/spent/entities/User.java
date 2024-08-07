@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +18,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -68,10 +69,12 @@ public class User implements UserDetails {
     private UserRoleEnum role;
 
     @JsonIgnoreProperties("userCreator")
-    @OneToMany(mappedBy = "userCreator", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    @OneToMany(mappedBy = "userCreator")
     private List<Event> eventsCreated;
 
-    @ManyToMany(mappedBy = "eventParticipants", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    @ManyToMany(mappedBy = "eventParticipants")
     Set<Event> signedUpEvents;
 
     @Override
