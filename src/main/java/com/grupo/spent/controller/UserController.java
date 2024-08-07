@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.grupo.spent.dtos.requests.LoginDto;
 import com.grupo.spent.dtos.requests.RegisterDto;
 import com.grupo.spent.dtos.responses.AccessTokenDto;
+import com.grupo.spent.dtos.responses.RegisterResponseDto;
 import com.grupo.spent.entities.User;
 import com.grupo.spent.services.UserService;
 
@@ -28,12 +29,10 @@ public class UserController {
         try {
             User user = userService.register(registerDto.getEmail(), registerDto.getUsername(), registerDto.getName(),
             registerDto.getPassword());
-            // String token = userService.login(user.getEmail(), user.getPassword());
-            String token = "manuel0";
-            // RegisterResponseDto registerResponseDto = new RegisterResponseDto(user.getEmail(), user.getUsername(), user.getFirstName(), token);
-
+            String token = userService.login(registerDto.getEmail(), registerDto.getPassword());
+            
             return ResponseEntity.status(HttpStatus.CREATED)
-                .body(user);
+                .body(new RegisterResponseDto(user.getEmail(), user.getUsername(), user.getFirstName(), token));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
