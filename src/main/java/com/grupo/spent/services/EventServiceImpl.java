@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
+import com.grupo.spent.entities.User;
 import com.grupo.spent.repositories.EventRepository;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +23,8 @@ public class EventServiceImpl implements EventService{
 
     @Override
     public Event createEvent (String title, LocalDate date, LocalTime startTime, LocalTime endTime, 
-    Integer numParticipants, String address, Sport sport) {
+    Integer numParticipants, String address, Sport sport, User user) {
+
         Event event = new Event();
         event.setTitle(title);
         event.setDate(date);
@@ -31,6 +33,7 @@ public class EventServiceImpl implements EventService{
         event.setNumParticipants(numParticipants);
         event.setAddress(address);
         event.setSport(sport);
+        event.setUserCreator(user);
 
         return eventRepository.save(event);
     }

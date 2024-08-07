@@ -1,4 +1,4 @@
-package com.grupo.spent.dtos;
+package com.grupo.spent.dtos.requests;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -4,6 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,11 +59,13 @@ public class Event {
     @JoinColumn(name = "sport_id")
     private Sport sport;
 
+    @JsonIgnoreProperties("eventsCreated")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userCreator;
 
     @ManyToMany
+    @Fetch(FetchMode.JOIN)
     @JoinTable(name = "event_participants", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     Set<User> eventParticipants;
 }
