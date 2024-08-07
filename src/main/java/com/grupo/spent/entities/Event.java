@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,6 +56,7 @@ public class Event {
     @JoinColumn(name = "sport_id")
     private Sport sport;
 
+    @JsonIgnoreProperties("eventsCreated")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userCreator;

@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -66,6 +67,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
+    @JsonIgnoreProperties("userCreator")
     @OneToMany(mappedBy = "userCreator", fetch = FetchType.EAGER)
     private List<Event> eventsCreated;
 
