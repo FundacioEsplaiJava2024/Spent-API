@@ -49,14 +49,14 @@ public class EventController {
         User user = userService.findUserByUsername(username);
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(
-                createEventDto.getTitle(),
-                createEventDto.getDate(),
-                createEventDto.getStartTime(),
-                createEventDto.getEndTime(),
-                createEventDto.getNumParticipants(),
-                createEventDto.getAddress(),
-                sport,
-                user));
+                    createEventDto.getTitle(),
+                    createEventDto.getDate(),
+                    createEventDto.getStartTime(),
+                    createEventDto.getEndTime(),
+                    createEventDto.getNumParticipants(),
+                    createEventDto.getAddress(),
+                    sport,
+                    user));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
         }
@@ -69,22 +69,34 @@ public class EventController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEvent(@PathVariable Integer id) {
-        eventService.deleteEvent(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Event deleted");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findUserByUsername(username);
+        Event event = eventService.getEventById(id);
+        if (event != null && event.getUserCreator().getId().equals(user.getId())) {
+            eventService.deleteEvent(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Event deleted");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> editEvent(@PathVariable Integer id, @RequestBody EditEventDto editEventDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findUserByUsername(username);
         Event event = eventService.getEventById(id);
+        if (event != null && event.getUserCreator().getId().equals(user.getId())) {
+            String title = editEventDto.getTitle().orElse(event.getTitle());
+            LocalDate date = editEventDto.getDate().orElse(event.getDate());
+            LocalTime startTime = editEventDto.getStartTime().orElse(event.getStartTime());
+            LocalTime endTime = editEventDto.getEndTime().orElse(event.getEndTime());
+            Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNumParticipants());
+            String address = editEventDto.getAddress().orElse(event.getAddress());
 
-        String title = editEventDto.getTitle().orElse(event.getTitle());
-        LocalDate date = editEventDto.getDate().orElse(event.getDate());
-        LocalTime startTime = editEventDto.getStartTime().orElse(event.getStartTime());
-        LocalTime endTime = editEventDto.getEndTime().orElse(event.getEndTime());
-        Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNumParticipants());
-        String address = editEventDto.getAddress().orElse(event.getAddress());
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
     }
 }
