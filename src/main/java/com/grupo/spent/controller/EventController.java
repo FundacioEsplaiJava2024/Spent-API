@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.grupo.spent.dtos.CreateEventDto;
-import com.grupo.spent.dtos.EditEventDto;
+import com.grupo.spent.dtos.requests.EditEventDto;
+import com.grupo.spent.dtos.requests.CreateEventDto;
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
 import com.grupo.spent.entities.User;

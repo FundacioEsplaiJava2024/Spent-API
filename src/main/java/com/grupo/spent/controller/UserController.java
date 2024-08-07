@@ -7,9 +7,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.grupo.spent.dtos.LoginDto;
-import com.grupo.spent.dtos.RegisterDto;
-import com.grupo.spent.dtos.RegisterResponseDto;
+import com.grupo.spent.dtos.requests.LoginDto;
+import com.grupo.spent.dtos.requests.RegisterDto;
+import com.grupo.spent.dtos.responses.AccessTokenDto;
 import com.grupo.spent.entities.User;
 import com.grupo.spent.services.UserService;
 
@@ -30,7 +30,7 @@ public class UserController {
             registerDto.getPassword());
             // String token = userService.login(user.getEmail(), user.getPassword());
             String token = "manuel0";
-            RegisterResponseDto registerResponseDto = new RegisterResponseDto(user.getEmail(), user.getUsername(), user.getFirstName(), token);
+            // RegisterResponseDto registerResponseDto = new RegisterResponseDto(user.getEmail(), user.getUsername(), user.getFirstName(), token);
 
             return ResponseEntity.status(HttpStatus.CREATED)
                 .body(user);
@@ -43,8 +43,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
             var accessToken = userService.login(loginDto.getEmail(), loginDto.getPassword());
-            String formattedResponse = "accessToken: " + accessToken;
-            return ResponseEntity.status(HttpStatus.OK).body(formattedResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(new AccessTokenDto(accessToken));
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
         }
