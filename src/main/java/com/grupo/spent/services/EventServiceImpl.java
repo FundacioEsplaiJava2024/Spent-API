@@ -2,6 +2,7 @@ package com.grupo.spent.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class EventServiceImpl implements EventService {
         event.setAddress(address);
         event.setSport(sport);
         event.setUserCreator(user);
+        event.setEventParticipants(new ArrayList<>());
 
         return eventRepository.save(event);
     }
