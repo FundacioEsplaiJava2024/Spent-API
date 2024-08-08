@@ -2,7 +2,7 @@ package com.grupo.spent.entities;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
+import java.util.List;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -59,14 +59,14 @@ public class Event {
     @JoinColumn(name = "sport_id")
     private Sport sport;
 
-    @JsonIgnoreProperties("eventsCreated")
+    @JsonIgnoreProperties({"eventsCreated", "joinedEvents"})
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userCreator;
 
-    @JsonIgnoreProperties("eventsCreated")
+    @JsonIgnoreProperties({"eventsCreated", "joinedEvents"})
     @ManyToMany
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "event_participants", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    Set<User> eventParticipants;
+    List<User> eventParticipants;
 }

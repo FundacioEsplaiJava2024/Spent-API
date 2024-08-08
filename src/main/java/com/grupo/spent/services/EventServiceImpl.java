@@ -11,6 +11,7 @@ import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
 import com.grupo.spent.entities.User;
 import com.grupo.spent.repositories.EventRepository;
+import com.grupo.spent.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -20,6 +21,8 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Event createEvent(String title, LocalDate date, LocalTime startTime, LocalTime endTime,
@@ -69,14 +72,16 @@ public class EventServiceImpl implements EventService {
 
     public Event joinEvent(Event event, User user) {
         event.getEventParticipants().add(user);
-        user.getJoinedEvents().add(event);
         return eventRepository.save(event);
     }
 
     public Event withdrawEvent(Event event, User user) {
-
-        // event.getEventParticipants().remove(user);
-        // user.getJoinedEvents().remove(event);
-        return event;
+        for (int i = 0; i < event.getEventParticipants().size(); i++) {
+            if (event.getEventParticipants().get(i).getId().equals(user.getId())) {
+                event.getEventParticipants().remove(i);
+                return eventRepository.save(event);
+            }
+        }
+        return eventRepository.save(event);
     }
 }

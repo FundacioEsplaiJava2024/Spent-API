@@ -75,12 +75,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userCreator")
     private List<Event> eventsCreated;
 
-
-    @JsonIgnore
     @JsonIgnoreProperties("eventsCreated")
     @ManyToMany(mappedBy = "eventParticipants")
     @Fetch(FetchMode.JOIN)
-    Set<Event> joinedEvents;
+    List<Event> joinedEvents;
 
     @JsonIgnore
     @Override
