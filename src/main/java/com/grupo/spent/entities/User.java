@@ -55,6 +55,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @JsonIgnore
     @Column(nullable = false, name = "register_date")
     private LocalDate registerDate;
 
@@ -65,19 +66,23 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private int totalRatings;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    @JsonIgnoreProperties("userCreator")
+    @JsonIgnoreProperties({"userCreator", "eventsParticipants"})
     @Fetch(FetchMode.JOIN)
     @OneToMany(mappedBy = "userCreator")
     private List<Event> eventsCreated;
 
+
+    @JsonIgnore
     @JsonIgnoreProperties("eventsCreated")
     @ManyToMany(mappedBy = "eventParticipants")
     @Fetch(FetchMode.JOIN)
     Set<Event> joinedEvents;
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role == UserRoleEnum.ADMIN) {
@@ -86,21 +91,25 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return UserDetails.super.isAccountNonLocked();
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return UserDetails.super.isCredentialsNonExpired();
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();

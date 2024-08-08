@@ -108,5 +108,19 @@ public class EventController {
         
         return ResponseEntity.status(HttpStatus.OK).body(eventService.joinEvent(event, user));
     }
+
+    @DeleteMapping ("/withdraw/{id}")
+    public ResponseEntity<?> withdrawEvent(@PathVariable Integer id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        
+
+        User user = userService.findUserByUsername(username);
+        
+        Event event = eventService.getEventById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(event);
+        
+        // return ResponseEntity.status(HttpStatus.OK).body(eventService.withdrawEvent(event, user));
+    }
     
 }

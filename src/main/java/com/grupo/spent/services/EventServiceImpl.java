@@ -11,22 +11,19 @@ import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
 import com.grupo.spent.entities.User;
 import com.grupo.spent.repositories.EventRepository;
-import com.grupo.spent.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class EventServiceImpl implements EventService{
+public class EventServiceImpl implements EventService {
 
     @Autowired
     private EventRepository eventRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
-    public Event createEvent (String title, LocalDate date, LocalTime startTime, LocalTime endTime, 
-    Integer numParticipants, String address, Sport sport, User user) {
+    public Event createEvent(String title, LocalDate date, LocalTime startTime, LocalTime endTime,
+            Integer numParticipants, String address, Sport sport, User user) {
 
         Event event = new Event();
         event.setTitle(title);
@@ -57,7 +54,8 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public Event editEvent (Integer id, String title, LocalDate data, LocalTime startTime, LocalTime endTime, Integer numParticipants, String address) {
+    public Event editEvent(Integer id, String title, LocalDate data, LocalTime startTime, LocalTime endTime,
+            Integer numParticipants, String address) {
         Event existingEvent = eventRepository.findById(id).orElse(null);
         existingEvent.setTitle(title);
         existingEvent.setDate(data);
@@ -73,5 +71,12 @@ public class EventServiceImpl implements EventService{
         event.getEventParticipants().add(user);
         user.getJoinedEvents().add(event);
         return eventRepository.save(event);
+    }
+
+    public Event withdrawEvent(Event event, User user) {
+
+        // event.getEventParticipants().remove(user);
+        // user.getJoinedEvents().remove(event);
+        return event;
     }
 }
