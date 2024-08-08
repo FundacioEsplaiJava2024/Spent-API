@@ -24,7 +24,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+static @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
