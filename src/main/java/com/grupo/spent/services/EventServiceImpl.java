@@ -72,7 +72,6 @@ public class EventServiceImpl implements EventService{
     public Event joinEvent(Event event, User user) {
         event.getEventParticipants().add(user);
         user.getJoinedEvents().add(event);
-        userRepository.save(user);
         return eventRepository.save(event);
     }
 }

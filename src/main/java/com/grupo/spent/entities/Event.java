@@ -64,6 +64,7 @@ public class Event {
     @JoinColumn(name = "user_id")
     private User userCreator;
 
+    @JsonIgnoreProperties("eventsCreated")
     @ManyToMany
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "event_participants", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))

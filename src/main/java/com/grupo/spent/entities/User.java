@@ -73,6 +73,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userCreator")
     private List<Event> eventsCreated;
 
+    @JsonIgnoreProperties("eventsCreated")
     @ManyToMany(mappedBy = "eventParticipants")
     @Fetch(FetchMode.JOIN)
     Set<Event> joinedEvents;
