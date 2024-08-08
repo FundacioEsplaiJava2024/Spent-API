@@ -107,7 +107,7 @@ public class EventController {
         Event event = eventService.getEventById(id);
 
         if (event.getEventParticipants().size() > event.getNumParticipants())
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Event already filled.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Event already filled.");
 
         if (eventContainsUser(event, user))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You already joined this event");
@@ -121,6 +121,9 @@ public class EventController {
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
         Event event = eventService.getEventById(id);
+
+        if (!eventContainsUser(event, user))
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You haven't joined this event");
 
         return ResponseEntity.status(HttpStatus.OK).body(eventService.withdrawEvent(event, user));
     }
