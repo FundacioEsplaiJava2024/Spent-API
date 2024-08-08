@@ -105,18 +105,36 @@ public class EventController {
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
         Event event = eventService.getEventById(id);
-        
+
+        if (event.getEventParticipants().size() > event.getNumParticipants())
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Event already filled.");
+
+        if (eventContainsUser(event, user))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You already joined this event");
+
         return ResponseEntity.status(HttpStatus.OK).body(eventService.joinEvent(event, user));
     }
 
-    @DeleteMapping ("/withdraw/{id}")
+    @DeleteMapping("/withdraw/{id}")
     public ResponseEntity<?> withdrawEvent(@PathVariable Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
         Event event = eventService.getEventById(id);
-        
+
         return ResponseEntity.status(HttpStatus.OK).body(eventService.withdrawEvent(event, user));
     }
-    
+
+    public boolean eventContainsUser(Event event, User user) {
+        boolean check = false;
+        if (event.getEventParticipants().isEmpty()) return check;
+        for (int i = 0; i < event.getEventParticipants().size(); i++) {
+            if (event.getEventParticipants().get(i).getId() == user.getId()) {
+                check = true;
+            }
+        }
+
+        return check;
+    }
+
 }
