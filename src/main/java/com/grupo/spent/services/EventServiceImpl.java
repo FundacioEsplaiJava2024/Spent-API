@@ -11,7 +11,6 @@ import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
 import com.grupo.spent.entities.User;
 import com.grupo.spent.repositories.EventRepository;
-import com.grupo.spent.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -21,8 +20,6 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private EventRepository eventRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     public Event createEvent(String title, LocalDate date, LocalTime startTime, LocalTime endTime,
