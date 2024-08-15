@@ -2,6 +2,7 @@ package com.grupo.spent.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,14 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class EventServiceImpl implements EventService{
+public class EventServiceImpl implements EventService {
 
     @Autowired
     private EventRepository eventRepository;
 
     @Override
-    public Event createEvent (String title, LocalDate date, LocalTime startTime, LocalTime endTime, 
-    Integer numParticipants, String address, Sport sport, User user) {
+    public Event createEvent(String title, LocalDate date, LocalTime startTime, LocalTime endTime,
+            Integer numParticipants, String address, Sport sport, User user) {
 
         Event event = new Event();
         event.setTitle(title);
@@ -34,6 +35,7 @@ public class EventServiceImpl implements EventService{
         event.setAddress(address);
         event.setSport(sport);
         event.setUserCreator(user);
+        event.setEventParticipants(new ArrayList<>());
 
         return eventRepository.save(event);
     }
@@ -54,7 +56,8 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public Event editEvent (Integer id, String title, LocalDate data, LocalTime startTime, LocalTime endTime, Integer numParticipants, String address) {
+    public Event editEvent(Integer id, String title, LocalDate data, LocalTime startTime, LocalTime endTime,
+            Integer numParticipants, String address) {
         Event existingEvent = eventRepository.findById(id).orElse(null);
         existingEvent.setTitle(title);
         existingEvent.setDate(data);
@@ -66,4 +69,18 @@ public class EventServiceImpl implements EventService{
         return eventRepository.save(existingEvent);
     }
 
+    public Event joinEvent(Event event, User user) {
+        event.getEventParticipants().add(user);
+        return eventRepository.save(event);
+    }
+
+    public Event withdrawEvent(Event event, User user) {
+        for (int i = 0; i < event.getEventParticipants().size(); i++) {
+            if (event.getEventParticipants().get(i).getId().equals(user.getId())) {
+                event.getEventParticipants().remove(i);
+                return eventRepository.save(event);
+            }
+        }
+        return eventRepository.save(event);
+    }
 }
