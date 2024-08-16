@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.grupo.spent.dtos.requests.LoginDto;
 import com.grupo.spent.dtos.requests.RegisterDto;
-import com.grupo.spent.dtos.responses.AccessTokenDto;
+import com.grupo.spent.dtos.responses.LoginResponseDto;
 import com.grupo.spent.dtos.responses.RegisterResponseDto;
 import com.grupo.spent.entities.User;
 import com.grupo.spent.services.UserService;
@@ -43,7 +43,8 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
             var accessToken = userService.login(loginDto.getEmail(), loginDto.getPassword());
-            return ResponseEntity.status(HttpStatus.OK).body(new AccessTokenDto(accessToken));
+            User user = userService.findUserByEmail(loginDto.getEmail());
+            return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(user.getUsername(), accessToken));
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
         }
@@ -51,7 +52,7 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUserById(@PathVariable String username) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserByUsername(username)); 
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findUserByUsername(username)); 
     }
 
 }
