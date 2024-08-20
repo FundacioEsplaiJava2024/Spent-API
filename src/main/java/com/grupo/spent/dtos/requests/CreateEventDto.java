@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class CreateEventDto {
     private String title;
+    private String description;
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;

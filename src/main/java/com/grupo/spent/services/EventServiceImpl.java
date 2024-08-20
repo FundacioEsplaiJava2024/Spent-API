@@ -23,11 +23,12 @@ public class EventServiceImpl implements EventService {
     private EventRepository eventRepository;
 
     @Override
-    public Event createEvent(String title, LocalDate date, LocalTime startTime, LocalTime endTime,
+    public Event createEvent(String title, String description, LocalDate date, LocalTime startTime, LocalTime endTime,
             Integer numParticipants, String address, Sport sport, User user) {
 
         Event event = new Event();
         event.setTitle(title);
+        event.setDescription(description);
         event.setDate(date);
         event.setStartTime(startTime);
         event.setEndTime(endTime);
@@ -56,10 +57,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event editEvent(Integer id, String title, LocalDate data, LocalTime startTime, LocalTime endTime,
+    public Event editEvent(Integer id, String title, String description, LocalDate data, LocalTime startTime, LocalTime endTime,
             Integer numParticipants, String address) {
         Event existingEvent = eventRepository.findById(id).orElse(null);
         existingEvent.setTitle(title);
+        existingEvent.setDescription(description);
         existingEvent.setDate(data);
         existingEvent.setStartTime(startTime);
         existingEvent.setEndTime(endTime);
