@@ -50,6 +50,7 @@ public class EventController {
 
             Event event = eventService.createEvent(
                     createEventDto.getTitle(),
+                    createEventDto.getDescription(),
                     createEventDto.getDate(),
                     createEventDto.getStartTime(),
                     createEventDto.getEndTime(),
@@ -95,6 +96,7 @@ public class EventController {
         Event event = eventService.getEventById(id);
         if (event != null && event.getUserCreator().getId().equals(user.getId())) {
             String title = editEventDto.getTitle().orElse(event.getTitle());
+            String description = editEventDto.getDescription().orElse(event.getDescription());
             LocalDate date = editEventDto.getDate().orElse(event.getDate());
             LocalTime startTime = editEventDto.getStartTime().orElse(event.getStartTime());
             LocalTime endTime = editEventDto.getEndTime().orElse(event.getEndTime());
@@ -102,7 +104,7 @@ public class EventController {
             String address = editEventDto.getAddress().orElse(event.getAddress());
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(eventService.editEvent(id, title, date, startTime, endTime, numParticipants, address));
+                    .body(eventService.editEvent(id, title, description, date, startTime, endTime, numParticipants, address));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
     }

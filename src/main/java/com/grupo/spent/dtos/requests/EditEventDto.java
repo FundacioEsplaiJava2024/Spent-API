@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class EditEventDto {
     private Optional<String> title;
+    private Optional<String> description;
     private Optional<LocalDate> date;
     private Optional<LocalTime> startTime;
     private Optional<LocalTime> endTime;
@@ -17,11 +18,13 @@ public class EditEventDto {
 
     public EditEventDto(
             Optional<String> title,
+            Optional<String>description,
             Optional<LocalDate> date,
             Optional<LocalTime> startTime, Optional<LocalTime> endTime,
             Optional<Integer> numParticipants,
             Optional<String> address) {
         this.title = title;
+        this.description = description;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
