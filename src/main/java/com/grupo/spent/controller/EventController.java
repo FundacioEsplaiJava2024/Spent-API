@@ -69,6 +69,11 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.getAllEvents());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getEventById(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.getEventById(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEvent(@PathVariable Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
