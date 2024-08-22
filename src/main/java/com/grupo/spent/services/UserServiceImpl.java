@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.grupo.spent.auth.TokenProvider;
 import com.grupo.spent.entities.User;
 import com.grupo.spent.entities.UserRoleEnum;
+import com.grupo.spent.exceptions.NotFoundException;
 import com.grupo.spent.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
@@ -49,12 +50,21 @@ public class UserServiceImpl implements UserService {
         return accessToken;
     }
 
-    public User findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+    public User findUserByUsername(String username) throws NotFoundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new NotFoundException("User not found with username: " + username);
+
+        } else
+            return user;
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.getUserByEmail(email);
+    public User findUserByEmail(String email) throws NotFoundException {
+        User user = userRepository.getUserByEmail(email);
+        if (user == null) {
+            throw new NotFoundException("User not found with email: " + email);
 
+        } else
+            return user;
     }
 }

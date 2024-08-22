@@ -27,9 +27,4 @@ public class RegisterDto {
     @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 20, message = "Username should be 2 characters long minimum")
     private String name;
-
-    // public User toUser() {
-    //     return new User()
-    //         .setEmail(email.toLowerCase())
-    //   }
 }

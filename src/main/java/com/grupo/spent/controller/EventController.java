@@ -22,10 +22,12 @@ import com.grupo.spent.dtos.requests.EditEventDto;
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
 import com.grupo.spent.entities.User;
+import com.grupo.spent.exceptions.NotFoundException;
 import com.grupo.spent.services.EventService;
 import com.grupo.spent.services.SportService;
 import com.grupo.spent.services.UserService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -41,7 +43,7 @@ public class EventController {
     private UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) throws Exception {
+    public ResponseEntity<?> createEvent(@RequestBody @Valid CreateEventDto createEventDto) throws NotFoundException {
         try {
             Sport sport = sportService.getSportByName(createEventDto.getSportName());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -71,12 +73,12 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEventById(@PathVariable Integer id) {
+    public ResponseEntity<?> getEventById(@PathVariable Integer id) throws NotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.getEventById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEvent(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteEvent(@PathVariable Integer id) throws NotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
@@ -89,7 +91,8 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editEvent(@PathVariable Integer id, @RequestBody EditEventDto editEventDto) {
+    public ResponseEntity<?> editEvent(@PathVariable Integer id, @RequestBody EditEventDto editEventDto)
+            throws NotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
@@ -104,13 +107,14 @@ public class EventController {
             String address = editEventDto.getAddress().orElse(event.getAddress());
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(eventService.editEvent(id, title, description, date, startTime, endTime, numParticipants, address));
+                    .body(eventService.editEvent(id, title, description, date, startTime, endTime, numParticipants,
+                            address));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
     }
 
     @PostMapping("/join/{id}")
-    public ResponseEntity<?> joinEvent(@PathVariable Integer id) {
+    public ResponseEntity<?> joinEvent(@PathVariable Integer id) throws NotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
@@ -126,7 +130,7 @@ public class EventController {
     }
 
     @DeleteMapping("/withdraw/{id}")
-    public ResponseEntity<?> withdrawEvent(@PathVariable Integer id) {
+    public ResponseEntity<?> withdrawEvent(@PathVariable Integer id) throws NotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
