@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
     public Event getEventById(Integer id) throws NotFoundException {
         Event event = eventRepository.findById(id).orElse(null);
         if (event == null) {
-            throw new NotFoundException("Sport not found with id: " + id);
+            throw new NotFoundException("Event not found with id: " + id);
 
         } else
             return event;
