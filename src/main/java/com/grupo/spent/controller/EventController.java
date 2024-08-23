@@ -63,7 +63,7 @@ public class EventController {
             eventService.joinEvent(event, user);
             return ResponseEntity.status(HttpStatus.CREATED).body(event);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -83,8 +83,9 @@ public class EventController {
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
         Event event = eventService.getEventById(id);
-        if (event != null && event.getUserCreator().getId().equals(user.getId())) {
+        if (event.getUserCreator().getId().equals(user.getId())) {
             eventService.deleteEvent(id);
+            
             return ResponseEntity.status(HttpStatus.OK).body("Event deleted");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
