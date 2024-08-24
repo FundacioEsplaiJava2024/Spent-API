@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,6 +32,7 @@ public class CreateEventDto {
     private LocalTime endTime;
 
     @Max(value = 50, message = "Maximum number of participants is 50")
+    @Min(value = 2, message = "Minimum number of participants is 2")
     private Integer numParticipants;
 
     @NotEmpty(message = "Address is mandatory")
