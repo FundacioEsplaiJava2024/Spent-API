@@ -16,6 +16,7 @@ import com.grupo.spent.dtos.requests.RegisterDto;
 import com.grupo.spent.dtos.responses.LoginResponseDto;
 import com.grupo.spent.dtos.responses.RegisterResponseDto;
 import com.grupo.spent.entities.User;
+import com.grupo.spent.exceptions.HttpException;
 import com.grupo.spent.exceptions.NotFoundException;
 import com.grupo.spent.services.UserService;
 
@@ -29,16 +30,19 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterDto registerDto) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDto registerDto) throws NotFoundException {
         try {
+            if (userService.existsUserByEmail(registerDto.getEmail())) {
+                throw new HttpException(HttpStatus.BAD_REQUEST, "This User already exists.");
+            }
             User user = userService.register(registerDto.getEmail(), registerDto.getUsername(), registerDto.getName(),
                     registerDto.getPassword());
             String token = userService.login(registerDto.getEmail(), registerDto.getPassword());
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new RegisterResponseDto(user.getEmail(), user.getUsername(), user.getFirstName(), token));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
@@ -55,7 +59,10 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUserById(@PathVariable String username) throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findUserByUsername(username));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.findUserByUsername(username));
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
     }
-
 }

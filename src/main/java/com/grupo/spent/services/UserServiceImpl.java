@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new NotFoundException("User not found with username: " + username);
-
         } else
             return user;
     }
@@ -63,8 +62,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getUserByEmail(email);
         if (user == null) {
             throw new NotFoundException("User not found with email: " + email);
-
         } else
             return user;
+    }
+
+    public boolean existsUserByEmail(String email) {
+        return userRepository.existsUserByEmail(email);
     }
 }

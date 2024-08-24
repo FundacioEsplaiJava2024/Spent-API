@@ -11,4 +11,6 @@ public interface UserService {
     User findUserByUsername(String username) throws NotFoundException;
 
     User findUserByEmail(String email) throws NotFoundException;
+
+    boolean existsUserByEmail(String email);
 }
