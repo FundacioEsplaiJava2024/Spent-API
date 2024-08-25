@@ -59,6 +59,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void deleteEvent(Integer id) {
+        Event event = eventRepository.findById(id).orElse(null);
+        event.getEventParticipants().clear();
+        event.setUserCreator(null);
+        event.setSport(null);
+        eventRepository.save(event);
         eventRepository.deleteById(id);
     }
 
