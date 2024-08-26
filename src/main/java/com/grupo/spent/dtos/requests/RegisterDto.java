@@ -21,12 +21,12 @@ public class RegisterDto {
 
     @NotEmpty(message = "Password is mandatory")
     @NotNull(message = "Password is mandatory")
-    @Size(min = 5, max = 15, message = "Password should be between 5 and 15 characters")
+    @Size(min = 7, max = 20, message = "Password should be between 3 and 15 characters")
     @Pattern(regexp = "^(?=.*\\d).*$", message = "Password must contain at least one number")
     private String password;
 
     @NotEmpty(message = "Name is mandatory")
     @NotNull(message = "Name is mandatory")
-    @Size(min = 1, max = 20, message = "Username should be between 1 and 20 characters")
+    @Size(min = 2, max = 20, message = "Username should be between 2 and 20 characters")
     private String name;
 }
