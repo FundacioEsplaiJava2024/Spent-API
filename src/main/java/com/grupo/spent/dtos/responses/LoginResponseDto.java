@@ -1,5 +1,11 @@
 package com.grupo.spent.dtos.responses;
 
-public record LoginResponseDto(String username, String accessToken) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
+public class LoginResponseDto {
+    private String username;
+    private String accessToken;
 }
