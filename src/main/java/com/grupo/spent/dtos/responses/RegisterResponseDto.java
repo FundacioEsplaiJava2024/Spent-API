@@ -1,4 +1,13 @@
 package com.grupo.spent.dtos.responses;
 
-public record RegisterResponseDto(String email, String username, String name, String accessToken) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class RegisterResponseDto {
+    private String email;
+    private String username;
+    private String name;
+    private String accessToken;
 }
