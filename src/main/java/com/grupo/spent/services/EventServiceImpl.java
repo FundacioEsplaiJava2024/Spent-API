@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
 import com.grupo.spent.entities.User;
+import com.grupo.spent.exceptions.NotFoundException;
 import com.grupo.spent.repositories.EventRepository;
 
 import lombok.AllArgsConstructor;
@@ -47,17 +48,28 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getEventById(Integer id) {
-        return eventRepository.findById(id).orElse(null);
+    public Event getEventById(Integer id) throws NotFoundException {
+        Event event = eventRepository.findById(id).orElse(null);
+        if (event == null) {
+            throw new NotFoundException("Event not found with id: " + id);
+
+        } else
+            return event;
     }
 
     @Override
     public void deleteEvent(Integer id) {
+        Event event = eventRepository.findById(id).orElse(null);
+        event.getEventParticipants().clear();
+        event.setUserCreator(null);
+        event.setSport(null);
+        eventRepository.save(event);
         eventRepository.deleteById(id);
     }
 
     @Override
-    public Event editEvent(Integer id, String title, String description, LocalDate data, LocalTime startTime, LocalTime endTime,
+    public Event editEvent(Integer id, String title, String description, LocalDate data, LocalTime startTime,
+            LocalTime endTime,
             Integer numParticipants, String address) {
         Event existingEvent = eventRepository.findById(id).orElse(null);
         existingEvent.setTitle(title);

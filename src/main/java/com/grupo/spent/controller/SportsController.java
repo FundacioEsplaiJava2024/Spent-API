@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.grupo.spent.entities.Sport;
+import com.grupo.spent.exceptions.HttpException;
+import com.grupo.spent.exceptions.NotFoundException;
 import com.grupo.spent.services.SportService;
 
 import lombok.AllArgsConstructor;
@@ -27,9 +29,12 @@ public class SportsController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<?> getSportByName(@PathVariable String name) {
-        Sport sport = sportsService.getSportByName(name);
-        return ResponseEntity.status(HttpStatus.OK).body(sport);
-
+    public ResponseEntity<?> getSportByName(@PathVariable String name) throws NotFoundException {
+        try {
+            Sport sport = sportsService.getSportByName(name);
+            return ResponseEntity.status(HttpStatus.OK).body(sport);
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
     }
 }

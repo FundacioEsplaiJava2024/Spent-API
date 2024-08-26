@@ -22,10 +22,13 @@ import com.grupo.spent.dtos.requests.EditEventDto;
 import com.grupo.spent.entities.Event;
 import com.grupo.spent.entities.Sport;
 import com.grupo.spent.entities.User;
+import com.grupo.spent.exceptions.HttpException;
+import com.grupo.spent.exceptions.NotFoundException;
 import com.grupo.spent.services.EventService;
 import com.grupo.spent.services.SportService;
 import com.grupo.spent.services.UserService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -41,7 +44,7 @@ public class EventController {
     private UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) throws Exception {
+    public ResponseEntity<?> createEvent(@RequestBody @Valid CreateEventDto createEventDto) throws NotFoundException {
         try {
             Sport sport = sportService.getSportByName(createEventDto.getSportName());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,8 +63,8 @@ public class EventController {
                     user);
             eventService.joinEvent(event, user);
             return ResponseEntity.status(HttpStatus.CREATED).body(event);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
@@ -71,71 +74,94 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEventById(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.getEventById(id));
+    public ResponseEntity<?> getEventById(@PathVariable Integer id) throws NotFoundException {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(eventService.getEventById(id));
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEvent(@PathVariable Integer id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findUserByUsername(username);
-        Event event = eventService.getEventById(id);
-        if (event != null && event.getUserCreator().getId().equals(user.getId())) {
-            eventService.deleteEvent(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Event deleted");
+    public ResponseEntity<?> deleteEvent(@PathVariable Integer id) throws NotFoundException {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userService.findUserByUsername(username);
+            Event event = eventService.getEventById(id);
+            if (event.getUserCreator().getId().equals(user.getId())) {
+                eventService.deleteEvent(id);
+
+                return ResponseEntity.status(HttpStatus.OK).body("Event deleted");
+            } else
+                throw new HttpException(HttpStatus.BAD_REQUEST, "You are not the Creator of the event");
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editEvent(@PathVariable Integer id, @RequestBody EditEventDto editEventDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findUserByUsername(username);
-        Event event = eventService.getEventById(id);
-        if (event != null && event.getUserCreator().getId().equals(user.getId())) {
-            String title = editEventDto.getTitle().orElse(event.getTitle());
-            String description = editEventDto.getDescription().orElse(event.getDescription());
-            LocalDate date = editEventDto.getDate().orElse(event.getDate());
-            LocalTime startTime = editEventDto.getStartTime().orElse(event.getStartTime());
-            LocalTime endTime = editEventDto.getEndTime().orElse(event.getEndTime());
-            Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNumParticipants());
-            String address = editEventDto.getAddress().orElse(event.getAddress());
+    public ResponseEntity<?> editEvent(@PathVariable Integer id, @RequestBody EditEventDto editEventDto)
+            throws NotFoundException {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userService.findUserByUsername(username);
+            Event event = eventService.getEventById(id);
+            if (event != null && event.getUserCreator().getId().equals(user.getId())) {
+                String title = editEventDto.getTitle().orElse(event.getTitle());
+                String description = editEventDto.getDescription().orElse(event.getDescription());
+                LocalDate date = editEventDto.getDate().orElse(event.getDate());
+                LocalTime startTime = editEventDto.getStartTime().orElse(event.getStartTime());
+                LocalTime endTime = editEventDto.getEndTime().orElse(event.getEndTime());
+                Integer numParticipants = editEventDto.getNumParticipants().orElse(event.getNumParticipants());
+                String address = editEventDto.getAddress().orElse(event.getAddress());
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(eventService.editEvent(id, title, description, date, startTime, endTime, numParticipants, address));
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(eventService.editEvent(id, title, description, date, startTime, endTime, numParticipants,
+                                address));
+            } else
+                throw new HttpException(HttpStatus.BAD_REQUEST, "You are not the Creator of the event");
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not the Creator of the event");
     }
 
     @PostMapping("/join/{id}")
-    public ResponseEntity<?> joinEvent(@PathVariable Integer id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findUserByUsername(username);
-        Event event = eventService.getEventById(id);
+    public ResponseEntity<?> joinEvent(@PathVariable Integer id) throws NotFoundException {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userService.findUserByUsername(username);
+            Event event = eventService.getEventById(id);
 
-        if (event.getEventParticipants().size() > event.getNumParticipants())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Event already filled.");
+            if (event.getEventParticipants().size() > event.getNumParticipants())
+                throw new HttpException(HttpStatus.BAD_REQUEST, "Event already filled.");
 
-        if (eventContainsUser(event, user))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You already joined this event");
+            if (eventContainsUser(event, user))
+                throw new HttpException(HttpStatus.BAD_REQUEST, "You already joined this event");
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.joinEvent(event, user));
+            return ResponseEntity.status(HttpStatus.OK).body(eventService.joinEvent(event, user));
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/withdraw/{id}")
-    public ResponseEntity<?> withdrawEvent(@PathVariable Integer id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findUserByUsername(username);
-        Event event = eventService.getEventById(id);
+    public ResponseEntity<?> withdrawEvent(@PathVariable Integer id) throws NotFoundException {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userService.findUserByUsername(username);
+            Event event = eventService.getEventById(id);
 
-        if (!eventContainsUser(event, user))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You haven't joined this event");
+            if (!eventContainsUser(event, user))
+                throw new HttpException(HttpStatus.BAD_REQUEST, "You haven't joined this event");
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.withdrawEvent(event, user));
+            return ResponseEntity.status(HttpStatus.OK).body(eventService.withdrawEvent(event, user));
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
     }
 
     public boolean eventContainsUser(Event event, User user) {
@@ -147,8 +173,6 @@ public class EventController {
                 check = true;
             }
         }
-
         return check;
     }
-
 }
