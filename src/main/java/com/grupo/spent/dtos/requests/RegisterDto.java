@@ -12,11 +12,12 @@ public class RegisterDto {
     @Email(message = "Email is not well formatted")
     @NotEmpty(message = "Email is mandatory")
     @NotNull(message = "Email is mandatory")
+    @Pattern(regexp = "^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\\.(com|es)$", message = "Invalid email format")
     private String email;
 
     @NotEmpty(message = "Username is mandatory")
     @NotNull(message = "Username is mandatory")
-    @Size(min = 5, max = 15, message = "Username should be between 5 and 15 characters")
+    @Size(min = 3, max = 15, message = "Username should be between 5 and 15 characters")
     private String username;
 
     @NotEmpty(message = "Password is mandatory")
